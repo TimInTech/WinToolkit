@@ -16,6 +16,94 @@
 # ─────────────────────────────────────────────────────────────────────────────
 $Script:LogPfad     = $null
 $Script:ToolkitRoot = Split-Path -Parent $PSScriptRoot   # lib\ -> root
+$Script:LangCode        = 'de'   # Default, overwritten by Initialize-Language
+$Script:LangInitialized = $false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sprach-Strings (EN / DE)
+# ─────────────────────────────────────────────────────────────────────────────
+$Script:Strings = @{
+    en = @{
+        log_info         = '[INFO]   '
+        log_warn         = '[WARN]   '
+        log_error        = '[ERROR]  '
+        log_ok           = '[OK]     '
+        log_debug        = '[DEBUG]  '
+        confirm_yes      = '[Y/n]'
+        confirm_no       = '[y/N]'
+        press_key        = '  Press any key to exit...'
+        mod_bootstrap    = '00 - Bootstrap & System Check'
+        mod_updates      = '10 - Updates & Drivers'
+        mod_maintenance  = '20 - Maintenance & Privacy'
+        mod_repair       = '30 - Repair & Diagnostics'
+        bs_next          = '  Next step:'
+        bs_opt1          = '    Run:  10-Updates.ps1'
+        bs_opt2          = '    or:   20-Maintenance.ps1'
+        bs_complete      = 'Bootstrap completed successfully.'
+        bs_hw            = '  Hardware detected:'
+        bs_ssd_yes       = 'Yes'
+        bs_ssd_no        = 'No'
+        bs_bat_yes       = 'Yes'
+        bs_bat_no        = 'No'
+        bs_done_title    = ' Bootstrap completed '
+        upd_skip         = '-Skip set: update steps will be skipped.'
+        upd_driver_q     = 'Install driver updates now?'
+        upd_reboot_30    = '  RESTART IN 30 SECONDS'
+        upd_reboot_auto  = '  Updates will continue after restart automatically.'
+        upd_reboot_stop  = '  To cancel: Shutdown /a'
+        upd_done_title   = ' Updates completed '
+        upd_done_msg     = 'All update steps completed successfully.'
+        upd_next         = '  Next step: 20-Maintenance.ps1'
+        upd_reboot_q     = 'Restart now?'
+        maint_done_title = ' Maintenance completed '
+        maint_done_msg   = 'All maintenance steps completed.'
+        maint_reboot_warn = '  IMPORTANT: A restart is recommended to apply all changes.'
+        maint_reboot_q   = 'Restart now?'
+        maint_report     = '  Report:'
+        maint_report_hint = '  (Open in browser for formatted view)'
+        repair_select    = 'Select: '
+    }
+    de = @{
+        log_info         = '[INFO]   '
+        log_warn         = '[WARN]   '
+        log_error        = '[FEHLER] '
+        log_ok           = '[OK]     '
+        log_debug        = '[DEBUG]  '
+        confirm_yes      = '[J/n]'
+        confirm_no       = '[j/N]'
+        press_key        = '  Druecke eine Taste zum Beenden...'
+        mod_bootstrap    = '00 - Bootstrap & Systemcheck'
+        mod_updates      = '10 - Updates & Treiber'
+        mod_maintenance  = '20 - Bereinigung & Datenschutz'
+        mod_repair       = '30 - Reparatur & Diagnose'
+        bs_next          = '  Naechster Schritt:'
+        bs_opt1          = '    Starte: 10-Updates.ps1'
+        bs_opt2          = '    oder:   20-Maintenance.ps1'
+        bs_complete      = 'Bootstrap erfolgreich abgeschlossen.'
+        bs_hw            = '  Hardware erkannt:'
+        bs_ssd_yes       = 'Ja'
+        bs_ssd_no        = 'Nein'
+        bs_bat_yes       = 'Ja'
+        bs_bat_no        = 'Nein'
+        bs_done_title    = ' Bootstrap abgeschlossen '
+        upd_skip         = '-Skip gesetzt: Updates werden uebersprungen.'
+        upd_driver_q     = 'Treiber-Updates jetzt installieren?'
+        upd_reboot_30    = '  NEUSTART IN 30 SEKUNDEN'
+        upd_reboot_auto  = '  Updates werden nach dem Neustart automatisch fortgesetzt.'
+        upd_reboot_stop  = '  Zum Abbrechen: Shutdown /a'
+        upd_done_title   = ' Updates abgeschlossen '
+        upd_done_msg     = 'Alle Update-Schritte erfolgreich abgeschlossen.'
+        upd_next         = '  Naechster Schritt: 20-Maintenance.ps1'
+        upd_reboot_q     = 'Jetzt neu starten?'
+        maint_done_title = ' Maintenance abgeschlossen '
+        maint_done_msg   = 'Alle Wartungsschritte abgeschlossen.'
+        maint_reboot_warn = '  WICHTIG: Ein Neustart wird empfohlen um alle Aenderungen anzuwenden.'
+        maint_reboot_q   = 'Jetzt neu starten?'
+        maint_report     = '  Bericht:'
+        maint_report_hint = '  (Im Browser oeffnen fuer formatierte Ansicht)'
+        repair_select    = 'Auswahl: '
+    }
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Initialize-Log
@@ -95,12 +183,12 @@ function Write-Log {
         }
 
         $praefix = switch ($Ebene) {
-            'Info'    { '[INFO]   ' }
-            'Warn'    { '[WARN]   ' }
-            'Error'   { '[FEHLER] ' }
-            'Success' { '[OK]     ' }
-            'Debug'   { '[DEBUG]  ' }
-            default   { '[INFO]   ' }
+            'Info'    { Get-LStr 'log_info'  }
+            'Warn'    { Get-LStr 'log_warn'  }
+            'Error'   { Get-LStr 'log_error' }
+            'Success' { Get-LStr 'log_ok'    }
+            'Debug'   { Get-LStr 'log_debug' }
+            default   { Get-LStr 'log_info'  }
         }
 
         Write-Host "$praefix $Nachricht" -ForegroundColor $farbe
@@ -131,7 +219,7 @@ function Confirm-Schritt {
         [switch]$Standard_Ja   # Bei Enter -> Ja (Standard: Nein)
     )
 
-    $hinweis = if ($Standard_Ja) { '[J/n]' } else { '[j/N]' }
+    $hinweis = if ($Standard_Ja) { Get-LStr 'confirm_yes' } else { Get-LStr 'confirm_no' }
 
     Write-Host ""
     Write-Host "  $Frage $hinweis " -ForegroundColor Yellow -NoNewline
@@ -459,6 +547,10 @@ function Show-ToolkitBanner {
         [string]$Version = '1.0.0'
     )
 
+    Initialize-Language  # Idempotent – sets $Script:LangCode from state or prompt
+
+    $langFlag = if ($Script:LangCode -eq 'en') { '[EN]' } else { '[DE]' }
+
     Clear-Host
     Write-Host ""
     Write-Host "  ██╗    ██╗██╗███╗   ██╗    ████████╗ ██████╗  ██████╗ ██╗     ██╗  ██╗██╗████████╗" -ForegroundColor Cyan
@@ -468,12 +560,87 @@ function Show-ToolkitBanner {
     Write-Host "  ╚███╔███╔╝██║██║ ╚████║       ██║   ╚██████╔╝╚██████╔╝███████╗██║  ██╗██║   ██║   " -ForegroundColor Cyan
     Write-Host "   ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝   " -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "  Windows 11 Optimierungs-Toolkit v$Version" -ForegroundColor White
+    Write-Host "  Windows 11 Optimization Toolkit v$Version" -ForegroundColor White
+    Write-Host "  by TimInTech  |  github.com/TimInTech/WinToolkit  |  $langFlag" -ForegroundColor DarkGray
     if ($Modul) {
-        Write-Host "  Modul: $Modul" -ForegroundColor Gray
+        Write-Host "  Module: $Modul" -ForegroundColor Gray
     }
     Write-Trennlinie
     Write-Host ""
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Initialize-Language
+# Loads saved language choice or shows selector. Idempotent.
+# ─────────────────────────────────────────────────────────────────────────────
+function Initialize-Language {
+    [CmdletBinding()]
+    param()
+
+    if ($Script:LangInitialized) { return }
+
+    $langPfad = Join-Path $Script:ToolkitRoot 'state\language.json'
+
+    if (Test-Path $langPfad) {
+        try {
+            $gespeichert = Get-Content $langPfad -Raw | ConvertFrom-Json
+            if ($gespeichert.Code -in @('en', 'de')) {
+                $Script:LangCode        = $gespeichert.Code
+                $Script:LangInitialized = $true
+                return
+            }
+        }
+        catch {}
+    }
+
+    # Show language selector
+    Write-Host ""
+    Write-Host "  ──────────────────────────────────────────────" -ForegroundColor DarkGray
+    Write-Host "  Select language  /  Sprache waehlen" -ForegroundColor White
+    Write-Host "  ──────────────────────────────────────────────" -ForegroundColor DarkGray
+    Write-Host "  [1]  English" -ForegroundColor Cyan
+    Write-Host "  [2]  Deutsch  (Standard / Default)" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host -NoNewline "  Input / Eingabe [1/2, Enter = Deutsch]: " -ForegroundColor Yellow
+
+    $wahl = ''
+    try { $wahl = Read-Host } catch {}
+
+    $Script:LangCode        = if ($wahl.Trim() -eq '1') { 'en' } else { 'de' }
+    $Script:LangInitialized = $true
+
+    # Persist choice in state\language.json
+    try {
+        $stateDir = Join-Path $Script:ToolkitRoot 'state'
+        if (-not (Test-Path $stateDir)) {
+            New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
+        }
+        [PSCustomObject]@{
+            Code      = $Script:LangCode
+            Timestamp = (Get-Date -Format 'o')
+        } | ConvertTo-Json | Out-File -FilePath $langPfad -Encoding UTF8 -Force
+    }
+    catch {}
+
+    $bestaetigung = if ($Script:LangCode -eq 'en') { '  Language: English' } else { '  Sprache:  Deutsch' }
+    Write-Host $bestaetigung -ForegroundColor Green
+    Write-Host ""
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Get-LStr
+# Returns a localized string by key. Falls back to the key itself if not found.
+# ─────────────────────────────────────────────────────────────────────────────
+function Get-LStr {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Key
+    )
+    $lang = if ($Script:Strings.ContainsKey($Script:LangCode)) { $Script:LangCode } else { 'de' }
+    if ($Script:Strings[$lang].ContainsKey($Key)) {
+        return $Script:Strings[$lang][$Key]
+    }
+    return $Key
 }
 
 Write-Verbose "Common.ps1 geladen (ToolkitRoot: $Script:ToolkitRoot)"

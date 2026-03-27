@@ -414,8 +414,8 @@ function New-OrdnerStruktur {
 
 # Log initialisieren
 Initialize-Log -Praefix 'Bootstrap'
-
-Show-ToolkitBanner -Modul '00 - Bootstrap & Systemcheck'
+Initialize-Language
+Show-ToolkitBanner -Modul (Get-LStr 'mod_bootstrap')
 
 # Schritt 1: Admin-Elevation pruefen
 Invoke-SelfElevation
@@ -490,24 +490,24 @@ catch {
 
 # Abschluss
 Write-Host ""
-Write-Trennlinie -Titel ' Bootstrap abgeschlossen '
+Write-Trennlinie -Titel (Get-LStr 'bs_done_title')
 Write-Host ""
-Write-Host "  Hardware erkannt:" -ForegroundColor White
-Write-Host "    OEM/Modell : $($hw['OEM']) $($hw['Model'])" -ForegroundColor Gray
-Write-Host "    CPU        : $($hw['CPU'])" -ForegroundColor Gray
-Write-Host "    GPU        : $($hw['GPU_Model']) ($($hw['GPU_Vendor']))" -ForegroundColor Gray
-Write-Host "    RAM        : $($hw['RAM_GB']) GB" -ForegroundColor Gray
-Write-Host "    SSD        : $(if ($hw['IsSSD']) { 'Ja' } else { 'Nein' })" -ForegroundColor Gray
-Write-Host "    Akku       : $(if ($hw['HasBattery']) { 'Ja' } else { 'Nein' })" -ForegroundColor Gray
+Write-Host (Get-LStr 'bs_hw') -ForegroundColor White
+Write-Host "    OEM/Model : $($hw['OEM']) $($hw['Model'])" -ForegroundColor Gray
+Write-Host "    CPU       : $($hw['CPU'])" -ForegroundColor Gray
+Write-Host "    GPU       : $($hw['GPU_Model']) ($($hw['GPU_Vendor']))" -ForegroundColor Gray
+Write-Host "    RAM       : $($hw['RAM_GB']) GB" -ForegroundColor Gray
+Write-Host "    SSD       : $(if ($hw['IsSSD']) { Get-LStr 'bs_ssd_yes' } else { Get-LStr 'bs_ssd_no' })" -ForegroundColor Gray
+Write-Host "    Battery   : $(if ($hw['HasBattery']) { Get-LStr 'bs_bat_yes' } else { Get-LStr 'bs_bat_no' })" -ForegroundColor Gray
 Write-Host ""
-Write-Log -Nachricht "Bootstrap erfolgreich abgeschlossen." -Ebene 'Success'
+Write-Log -Nachricht (Get-LStr 'bs_complete') -Ebene 'Success'
 Write-Host ""
-Write-Host "  Naechster Schritt:" -ForegroundColor White
-Write-Host "    Starte: 10-Updates.ps1" -ForegroundColor Cyan
-Write-Host "    oder:   20-Maintenance.ps1" -ForegroundColor Cyan
+Write-Host (Get-LStr 'bs_next') -ForegroundColor White
+Write-Host (Get-LStr 'bs_opt1') -ForegroundColor Cyan
+Write-Host (Get-LStr 'bs_opt2') -ForegroundColor Cyan
 Write-Host ""
 
 if (-not $Stumm) {
-    Write-Host "  Druecke eine Taste zum Beenden..." -ForegroundColor Gray
+    Write-Host (Get-LStr 'press_key') -ForegroundColor Gray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }

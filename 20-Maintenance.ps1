@@ -35,7 +35,8 @@ $ToolkitRoot = $PSScriptRoot
 Set-ToolkitRoot -Pfad $ToolkitRoot
 
 Initialize-Log -Praefix 'Maintenance'
-Show-ToolkitBanner -Modul '20 - Bereinigung & Datenschutz'
+Initialize-Language
+Show-ToolkitBanner -Modul (Get-LStr 'mod_maintenance')
 
 # Hardware-Profil laden
 $hw = Get-HardwareProfile
@@ -1249,21 +1250,21 @@ catch {}
 
 # Abschluss
 Write-Host ""
-Write-Trennlinie -Titel ' Maintenance abgeschlossen '
+Write-Trennlinie -Titel (Get-LStr 'maint_done_title')
 Write-Host ""
-Write-Log -Nachricht "Alle Wartungsschritte abgeschlossen." -Ebene 'Success'
+Write-Log -Nachricht (Get-LStr 'maint_done_msg') -Ebene 'Success'
 
 if ($berichtPfad -and (Test-Path $berichtPfad)) {
-    Write-Host "  Bericht: $berichtPfad" -ForegroundColor Cyan
-    Write-Host "  (Im Browser oeffnen fuer formatierte Ansicht)" -ForegroundColor Gray
+    Write-Host "$(Get-LStr 'maint_report') $berichtPfad" -ForegroundColor Cyan
+    Write-Host (Get-LStr 'maint_report_hint') -ForegroundColor Gray
 }
 
 Write-Host ""
-Write-Host "  WICHTIG: Ein Neustart wird empfohlen um alle Aenderungen anzuwenden." -ForegroundColor Yellow
+Write-Host (Get-LStr 'maint_reboot_warn') -ForegroundColor Yellow
 Write-Host ""
 
 if (-not $AllesOhneAbfrage) {
-    $neustart = Confirm-Schritt -Frage "Jetzt neu starten?"
+    $neustart = Confirm-Schritt -Frage (Get-LStr 'maint_reboot_q')
     if ($neustart) {
         Write-Log -Nachricht "Neustart wird ausgefuehrt..." -Ebene 'Info'
         Start-Sleep -Seconds 3

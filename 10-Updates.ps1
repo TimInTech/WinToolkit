@@ -38,7 +38,8 @@ $ToolkitRoot = $PSScriptRoot
 Set-ToolkitRoot -Pfad $ToolkitRoot
 
 Initialize-Log -Praefix 'Updates'
-Show-ToolkitBanner -Modul '10 - Updates & Treiber'
+Initialize-Language
+Show-ToolkitBanner -Modul (Get-LStr 'mod_updates')
 
 # Bootstrap-Check
 $bootstrapOkPfad = Join-Path $ToolkitRoot 'state\bootstrap-ok.json'
@@ -48,7 +49,7 @@ if (-not (Test-Path $bootstrapOkPfad)) {
 }
 
 if ($Skip) {
-    Write-Log -Nachricht "Parameter -Skip gesetzt: Updates werden uebersprungen." -Ebene 'Warn'
+    Write-Log -Nachricht (Get-LStr 'upd_skip') -Ebene 'Warn'
     # Zustandsdatei trotzdem schreiben
     [PSCustomObject]@{
         Timestamp   = (Get-Date -Format 'o')
@@ -174,7 +175,7 @@ function Install-WindowsUpdates {
                 foreach ($t in $treiber) {
                     Write-Host "    - $($t.Title)" -ForegroundColor Gray
                 }
-                $treiberInstallieren = Confirm-Schritt -Frage "Treiber-Updates jetzt installieren?"
+                $treiberInstallieren = Confirm-Schritt -Frage (Get-LStr 'upd_driver_q')
             }
 
             # Systemupdates installieren
@@ -236,9 +237,9 @@ function Install-WindowsUpdates {
 
                 Write-Log -Nachricht "Neustart in 30 Sekunden... (Scheduled Task fuer Wiederaufnahme angelegt)" -Ebene 'Warn'
                 Write-Host ""
-                Write-Host "  NEUSTART IN 30 SEKUNDEN" -ForegroundColor Red -BackgroundColor DarkRed
-                Write-Host "  Updates werden nach dem Neustart automatisch fortgesetzt." -ForegroundColor Yellow
-                Write-Host "  Zum Abbrechen: Shutdown /a" -ForegroundColor Gray
+                Write-Host (Get-LStr 'upd_reboot_30') -ForegroundColor Red -BackgroundColor DarkRed
+                Write-Host (Get-LStr 'upd_reboot_auto') -ForegroundColor Yellow
+                Write-Host (Get-LStr 'upd_reboot_stop') -ForegroundColor Gray
                 Write-Host ""
 
                 Start-Sleep -Seconds 30
@@ -433,18 +434,18 @@ catch {
 
 # Abschluss-Ausgabe
 Write-Host ""
-Write-Trennlinie -Titel ' Updates abgeschlossen '
+Write-Trennlinie -Titel (Get-LStr 'upd_done_title')
 Write-Host ""
-Write-Log -Nachricht "Alle Update-Schritte erfolgreich abgeschlossen." -Ebene 'Success'
+Write-Log -Nachricht (Get-LStr 'upd_done_msg') -Ebene 'Success'
 Write-Host ""
-Write-Host "  Naechster Schritt: 20-Maintenance.ps1" -ForegroundColor Cyan
+Write-Host (Get-LStr 'upd_next') -ForegroundColor Cyan
 Write-Host ""
 
-# Neustart-Empfehlung
+# Restart recommendation
 $finalReboot = Test-PendingReboot
 if ($finalReboot.NeuStartNoetig -and -not $KeineReboot) {
-    Write-Host "  Neustart empfohlen: $($finalReboot.Gruende -join ', ')" -ForegroundColor Yellow
-    $neustart = Confirm-Schritt -Frage "Jetzt neu starten?"
+    Write-Host "  $(Get-LStr 'upd_reboot_q') $($finalReboot.Gruende -join ', ')" -ForegroundColor Yellow
+    $neustart = Confirm-Schritt -Frage (Get-LStr 'upd_reboot_q')
     if ($neustart) {
         Write-Log -Nachricht "Neustart wird ausgefuehrt..." -Ebene 'Info'
         Start-Sleep -Seconds 3
@@ -452,6 +453,6 @@ if ($finalReboot.NeuStartNoetig -and -not $KeineReboot) {
     }
 }
 
-Write-Host "  Druecke eine Taste zum Beenden..." -ForegroundColor Gray
+Write-Host (Get-LStr 'press_key') -ForegroundColor Gray
 try { $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown') } catch {}
 

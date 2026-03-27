@@ -28,6 +28,7 @@ Set-ToolkitRoot -Pfad $ToolkitRoot
 
 Initialize-Log -Praefix 'Repair'
 $hw = Get-HardwareProfile -Stumm
+Initialize-Language
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Haupt-Menue anzeigen
@@ -35,26 +36,43 @@ $hw = Get-HardwareProfile -Stumm
 function Show-HauptMenue {
     Clear-Host
     Write-Host ""
-    Write-Host "  ╔══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "  ║    🔧 Windows 11 - Reparatur & Diagnose             ║" -ForegroundColor Cyan
-    Write-Host "  ╠══════════════════════════════════════════════════════╣" -ForegroundColor Cyan
-    Write-Host "  ║                                                      ║" -ForegroundColor Cyan
-    Write-Host "  ║  [1]  Systemzustand prüfen (Diagnose)               ║" -ForegroundColor White
-    Write-Host "  ║  [2]  Häufige Fehler beheben                        ║" -ForegroundColor White
-    Write-Host "  ║  [3]  Backup erstellen                              ║" -ForegroundColor White
-    Write-Host "  ║  [4]  Wiederherstellungspunkt laden                 ║" -ForegroundColor White
-    Write-Host "  ║  [5]  Neustart & Werksreset                         ║" -ForegroundColor White
-    Write-Host "  ║                                                      ║" -ForegroundColor Cyan
-    Write-Host "  ║  [Q]  Beenden                                        ║" -ForegroundColor Gray
-    Write-Host "  ║                                                      ║" -ForegroundColor Cyan
-    Write-Host "  ╚══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    if ($Script:LangCode -eq 'en') {
+        Write-Host "  ╔══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+        Write-Host "  ║    🔧 Windows 11 - Repair & Diagnostics             ║" -ForegroundColor Cyan
+        Write-Host "  ╠══════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ║  [1]  Check system health (Diagnostics)             ║" -ForegroundColor White
+        Write-Host "  ║  [2]  Fix common errors                             ║" -ForegroundColor White
+        Write-Host "  ║  [3]  Create backup                                 ║" -ForegroundColor White
+        Write-Host "  ║  [4]  Load restore point                            ║" -ForegroundColor White
+        Write-Host "  ║  [5]  Restart & Factory reset                       ║" -ForegroundColor White
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ║  [Q]  Exit                                          ║" -ForegroundColor Gray
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ╚══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    }
+    else {
+        Write-Host "  ╔══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+        Write-Host "  ║    🔧 Windows 11 - Reparatur & Diagnose             ║" -ForegroundColor Cyan
+        Write-Host "  ╠══════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ║  [1]  Systemzustand prüfen (Diagnose)               ║" -ForegroundColor White
+        Write-Host "  ║  [2]  Häufige Fehler beheben                        ║" -ForegroundColor White
+        Write-Host "  ║  [3]  Backup erstellen                              ║" -ForegroundColor White
+        Write-Host "  ║  [4]  Wiederherstellungspunkt laden                 ║" -ForegroundColor White
+        Write-Host "  ║  [5]  Neustart & Werksreset                         ║" -ForegroundColor White
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ║  [Q]  Beenden                                        ║" -ForegroundColor Gray
+        Write-Host "  ║                                                      ║" -ForegroundColor Cyan
+        Write-Host "  ╚══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    }
     Write-Host ""
     if ($hw) {
         Write-Host "  PC: $($hw.OEM) $($hw.Model) | RAM: $($hw.RAM_GB) GB | GPU: $($hw.GPU_Vendor)" -ForegroundColor DarkGray
     }
     Write-Host "  Log: $Script:LogPfad" -ForegroundColor DarkGray
     Write-Host ""
-    Write-Host "  Auswahl: " -ForegroundColor Yellow -NoNewline
+    Write-Host "  $(Get-LStr 'repair_select')" -ForegroundColor Yellow -NoNewline
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -798,7 +816,7 @@ function Invoke-WerksReset {
 # ─────────────────────────────────────────────────────────────────────────────
 # HAUPTSCHLEIFE
 # ─────────────────────────────────────────────────────────────────────────────
-Show-ToolkitBanner -Modul '30 - Reparatur & Diagnose'
+Show-ToolkitBanner -Modul (Get-LStr 'mod_repair')
 
 do {
     Show-HauptMenue
