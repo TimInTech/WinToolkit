@@ -10,6 +10,7 @@
 .NOTES
     Datei   : Start-Launcher.ps1
     Version : 1.0.0
+    Autor   : TimInTech (https://github.com/TimInTech)
     Benoetigte Assemblies: PresentationFramework, PresentationCore, WindowsBase
 #>
 

@@ -1,137 +1,154 @@
-# 🛠 Windows 11 Optimierungs-Toolkit
+# 🛠️ WinToolkit — Windows 11 Optimization Suite
 
-## Was macht dieses Toolkit?
+<div align="right">
+  <a href="README.de.md">
+    <img src="https://img.shields.io/badge/🇩🇪_Deutsch-Zur deutschen Version-blue?style=for-the-badge" alt="Deutsche Version"/>
+  </a>
+</div>
 
-Dieses Toolkit macht Ihren Windows-11-Computer schneller, sicherer und aufgeräumter. Es entfernt unnötige Programme, die Microsoft vorinstalliert hat, schaltet Funktionen aus, die Daten an Microsoft senden, installiert alle verfügbaren Updates und repariert häufige Windows-Probleme – alles mit wenigen Klicks, ohne technische Kenntnisse.
+> **Developed by [TimInTech](https://github.com/TimInTech)**
 
----
-
-## So starten Sie es (3 Schritte)
-
-**Schritt 1:** Rechtsklick auf `Start-Launcher.ps1` → **„Mit PowerShell ausführen"**
-
-**Schritt 2:** Windows fragt nach Administratorrechten → **„Ja"** klicken
-
-**Schritt 3:** Im Fenster auf **„Alle Module ausführen"** klicken – oder die Module einzeln starten
-
-> **Tipp:** Wenn Windows fragt ob das Skript vertrauenswürdig ist, klicken Sie auf „Ausführen" oder „Weitere Informationen" → „Trotzdem ausführen".
+A modular PowerShell toolkit that makes your Windows 11 PC faster, cleaner and more private — automatically, safely, and with full rollback support.
 
 ---
 
-## Wann nutze ich welches Modul?
+## ✨ What does this toolkit do?
 
-### Frisch installiertes Windows / Neuer PC
-Führen Sie alle Module der Reihe nach aus:
-1. **00 – Bootstrap:** Erkennt Ihren PC und prüft ob alles bereit ist
-2. **10 – Updates:** Installiert alle Windows-Updates und aktualisiert Programme
-3. **20 – Bereinigung:** Entfernt Bloatware, optimiert Einstellungen
+This toolkit removes unnecessary bloatware pre-installed by Microsoft, disables telemetry features, installs all available updates, and repairs common Windows issues — all with a few clicks and no technical knowledge required.
 
-### Langsamer PC
-Starten Sie direkt **20 – Bereinigung & Datenschutz**. Es räumt temporäre Dateien auf, entfernt unnötige Autostart-Programme und optimiert die Windows-Einstellungen.
-
-### Windows-Fehler / Abstürze
-Starten Sie **30 – Reparatur & Diagnose**. Das Programm prüft Systemdateien, analysiert Fehlerprotokolle und kann die häufigsten Probleme automatisch beheben.
+- **No data is sent** — runs fully locally on your PC
+- **Automatic rollback** — a restore point is created before every change
+- **Modular design** — run all modules or pick exactly what you need
 
 ---
 
-## Was wird entfernt – was bleibt?
+## 🚀 Quick Start (3 Steps)
 
-| Kategorie | Wird entfernt ✗ | Bleibt erhalten ✓ |
-|-----------|----------------|-------------------|
-| **Microsoft-Apps** | Xbox-Spiele, Bing-Wetter, Bing-News, Solitaire, Zune Music/Video, Cortana | Edge, Rechner, Notepad, Paint, Fotos, Store |
-| **Kommunikation** | Teams (Privat), Skype, Handylink | Outlook (falls installiert) |
-| **Unterhaltung** | Netflix, Disney+, Spotify, Candy Crush (wenn vorinstalliert) | — |
-| **HP-spezifisch** | SupportAssist-Werbung, HP Wolf Security (Consumer-Version) | HP-Druckertreiber |
-| **Windows-Dienste** | Telemetrie, Xbox-Netzwerkdienste, Faxdienst | Windows Update, Defender, Druckerdienst |
-| **Werbung** | Werbung im Startmenü, Vorschläge, Bing-Suche im Startmenü | — |
+**Step 1:** Right-click `Start-Launcher.ps1` → **"Run with PowerShell"**
 
-> **Wichtig:** Keine Ihrer persönlichen Dateien (Fotos, Dokumente, Downloads) werden angefasst. Das Toolkit verändert nur Windows-Systemeinstellungen und vorinstallierte Apps.
+**Step 2:** Windows asks for administrator rights → click **"Yes"**
+
+**Step 3:** Click **"Run all modules"** — or start individual modules as needed
+
+> **Tip:** If Windows asks whether the script is trusted, click "More info" → "Run anyway".
 
 ---
 
-## Wie kann ich Änderungen rückgängig machen?
+## 📦 Modules
 
-### Wiederherstellungspunkt
-Das Toolkit erstellt **automatisch einen Wiederherstellungspunkt** bevor es Änderungen vornimmt. Das ist wie ein Foto von Ihrem Windows-Zustand zu diesem Zeitpunkt.
+| Module | Purpose | When to use |
+|--------|---------|-------------|
+| **00 – Bootstrap** | System check & hardware detection | Always run first |
+| **10 – Updates** | Windows & driver updates | Fresh install or monthly maintenance |
+| **20 – Maintenance** | Bloatware removal, privacy, optimization | Slow PC or new installation |
+| **30 – Repair** | System file check, diagnostics, restore | Crashes or Windows errors |
 
-**So stellen Sie Windows wieder her:**
-
-1. Starten Sie **30 – Reparatur & Diagnose**
-2. Wählen Sie **Option [4] – Wiederherstellungspunkt laden**
-3. Wählen Sie den Punkt vor dem gewünschten Datum
-4. Windows startet neu und ist wieder im alten Zustand
-
-**Alternativ über Windows:**
-- Startmenü → „Wiederherstellungspunkt erstellen" → Tab „Systemschutz" → „Systemwiederherstellung"
-
-### Registry-Backups
-Vor jeder Registry-Änderung speichert das Toolkit automatisch eine Sicherungskopie im Ordner `backup\`. Diese `.reg`-Dateien können Sie per Doppelklick wieder einspielen.
+### Recommended order
+```
+Fresh install / New PC:    00 → 10 → 20 → 30
+Slow PC:                   20 (Maintenance)
+Windows errors / Crashes:  30 (Repair & Diagnostics)
+```
 
 ---
 
-## Häufig gestellte Fragen (FAQ)
+## 🔒 What gets removed — what stays?
 
-**F: Muss ich den Computer danach neu starten?**
-Ja, ein Neustart nach der Optimierung ist empfehlenswert, damit alle Änderungen vollständig übernommen werden.
+| Category | Removed ✗ | Kept ✓ |
+|----------|-----------|--------|
+| **Microsoft apps** | Xbox Games, Bing Weather, Bing News, Solitaire, Zune, Cortana | Edge, Calculator, Notepad, Paint, Photos, Store |
+| **Communication** | Teams (Personal), Skype, Phone Link | Outlook (if installed) |
+| **Entertainment** | Netflix, Disney+, Spotify, Candy Crush (pre-installed) | — |
+| **HP-specific** | SupportAssist ads, HP Wolf Security (consumer) | HP printer drivers |
+| **Windows services** | Telemetry, Xbox network services, Fax service | Windows Update, Defender, Print service |
+| **Advertising** | Start menu ads, suggestions, Bing search in Start | — |
 
-**F: Wie lange dauert das?**
-- Bootstrap: 1–2 Minuten
-- Updates: 15–60 Minuten (je nach Anzahl der Updates)
-- Bereinigung: 10–30 Minuten
-- Reparatur/Diagnose: 5–20 Minuten
-
-**F: Wird mein Internet langsamer?**
-Nein, im Gegenteil. Das Toolkit optimiert Netzwerkeinstellungen für schnellere Verbindungen und deaktiviert Hintergrunddienste, die Bandbreite verbrauchen.
-
-**F: Werden meine Programme gelöscht?**
-Nein. Es werden nur vorinstallierte Windows-Apps entfernt, die Microsoft ohne Ihre Zustimmung installiert hat (wie Xbox-Spiele oder Candy Crush). Alle Programme, die Sie selbst installiert haben, bleiben unberührt.
-
-**F: Kann ich einzelne Module mehrfach ausführen?**
-Ja. Alle Module sind so gestaltet, dass sie mehrfach ausgeführt werden können, ohne Schaden anzurichten.
-
-**F: Was passiert, wenn ein Fehler auftritt?**
-Das Toolkit protokolliert alle Aktionen im Ordner `logs\`. Bei Fehlern können Sie die Log-Datei öffnen und sich an den Support wenden.
-
-**F: Funktioniert das Toolkit auch mit Windows 10?**
-Das Toolkit ist für Windows 11 optimiert. Einzelne Module können auf Windows 10 funktionieren, sind aber nicht getestet.
-
-**F: Was bedeutet „Als Administrator ausführen"?**
-Viele Windows-Optimierungen erfordern erhöhte Rechte. Das ist vergleichbar damit, dass ein Hausbesitzer mehr Rechte in seinem Haus hat als ein Besucher. Das Toolkit fordert diese Rechte automatisch an.
-
-**F: Werden Daten an Dritte gesendet?**
-Nein. Das Toolkit arbeitet vollständig lokal auf Ihrem PC. Es werden keine Daten gesendet oder gesammelt.
+> **Important:** Your personal files (photos, documents, downloads) are **never touched**. The toolkit only modifies Windows system settings and pre-installed apps.
 
 ---
 
-## Dateistruktur
+## ↩️ How to undo changes
+
+### Restore Point
+The toolkit **automatically creates a restore point** before making any changes.
+
+**To restore Windows:**
+1. Run **30 – Repair & Diagnostics**
+2. Select **Option [4] – Load Restore Point**
+3. Choose the point before the desired date
+4. Windows restarts and reverts to the previous state
+
+**Alternatively via Windows:**
+- Start Menu → "Create a restore point" → "System Protection" tab → "System Restore"
+
+### Registry Backups
+Before every registry change, the toolkit saves a backup in the `backup\` folder. These `.reg` files can be re-applied with a double-click.
+
+---
+
+## ❓ FAQ
+
+**Q: Do I need to restart after optimization?**
+Yes, a restart is recommended so all changes take full effect.
+
+**Q: How long does it take?**
+- Bootstrap: 1–2 minutes
+- Updates: 15–60 minutes (depending on pending updates)
+- Maintenance: 10–30 minutes
+- Repair/Diagnostics: 5–20 minutes
+
+**Q: Will my internet get slower?**
+No — the opposite. The toolkit optimizes network settings and disables background services that consume bandwidth.
+
+**Q: Will my programs be deleted?**
+No. Only pre-installed Windows apps that Microsoft added without your consent (like Xbox Games or Candy Crush) are removed. All programs you installed yourself remain untouched.
+
+**Q: Can I run individual modules multiple times?**
+Yes. All modules are designed to be run multiple times without causing harm.
+
+**Q: What happens if an error occurs?**
+All actions are logged in the `logs\` folder. You can open the log file and report the issue with that information.
+
+**Q: Does this work on Windows 10?**
+The toolkit is optimized for Windows 11. Some modules may work on Windows 10, but they are untested.
+
+---
+
+## 📁 File Structure
 
 ```
 WinToolkit\
-├── Start-Launcher.ps1      ← Hier starten (GUI)
-├── 00-Bootstrap.ps1        ← Systemcheck & Hardware-Erkennung
-├── 10-Updates.ps1          ← Windows-Updates & Treiber
-├── 20-Maintenance.ps1      ← Bereinigung & Datenschutz
-├── 30-Repair.ps1           ← Reparatur & Diagnose
+├── Start-Launcher.ps1      ← Entry point (GUI)
+├── 00-Bootstrap.ps1        ← System check & hardware detection
+├── 10-Updates.ps1          ← Windows updates & drivers
+├── 20-Maintenance.ps1      ← Cleanup, privacy & optimization
+├── 30-Repair.ps1           ← Repair & diagnostics
 │
 ├── lib\
-│   └── Common.ps1          ← Gemeinsame Bibliothek
+│   └── Common.ps1          ← Shared function library
 │
-├── logs\                   ← Automatische Protokolle
-├── state\                  ← Zustandsdateien (Bootstrap, Updates, etc.)
-├── backup\                 ← Registry-Backups vor Änderungen
-└── reports\                ← HTML-Berichte nach der Bereinigung
+├── logs\                   ← Automatic run logs
+├── state\                  ← Runtime state files (bootstrap, updates, etc.)
+├── backup\                 ← Registry backups before changes
+└── reports\                ← HTML reports after maintenance
 ```
 
 ---
 
-## Systemvoraussetzungen
+## ⚙️ System Requirements
 
-- Windows 11 (Build 22000 oder neuer)
-- Administrator-Konto
-- PowerShell 5.0 oder neuer (in Windows 11 vorinstalliert)
-- Mindestens 5 GB freier Speicherplatz auf C:\
-- Internetverbindung (für Updates empfohlen)
+- Windows 11 (Build 22000 or newer)
+- Administrator account
+- PowerShell 5.0 or newer (pre-installed in Windows 11)
+- At least 5 GB free space on `C:\`
+- Internet connection (recommended for updates)
 
 ---
 
-*Windows 11 Optimierungs-Toolkit v1.0.0 – Erstellt für HP Z2 Tower G4 und andere Windows-11-Systeme*
+<div align="center">
+
+**WinToolkit v1.0.0**
+
+Made with ❤️ by [TimInTech](https://github.com/TimInTech)
+
+</div>

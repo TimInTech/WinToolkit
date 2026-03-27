@@ -8,7 +8,7 @@
 .NOTES
     Datei   : lib\Common.ps1
     Version : 1.0.0
-    Autor   : Windows Optimierungs-Toolkit
+    Autor   : TimInTech (https://github.com/TimInTech)
 #>
 
 # ─────────────────────────────────────────────────────────────────────────────

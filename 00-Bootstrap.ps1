@@ -8,6 +8,7 @@
 .NOTES
     Datei   : 00-Bootstrap.ps1
     Version : 1.0.0
+    Autor   : TimInTech (https://github.com/TimInTech)
     Ausfuehren als Administrator erforderlich.
 #>
 

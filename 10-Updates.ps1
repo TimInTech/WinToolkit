@@ -16,6 +16,7 @@
 .NOTES
     Datei   : 10-Updates.ps1
     Version : 1.0.0
+    Autor   : TimInTech (https://github.com/TimInTech)
     Abhaengigkeit: NuGet + PSWindowsUpdate werden bei Bedarf installiert.
 #>
 

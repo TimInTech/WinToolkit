@@ -9,6 +9,7 @@
 .NOTES
     Datei   : 30-Repair.ps1
     Version : 1.0.0
+    Autor   : TimInTech (https://github.com/TimInTech)
     Benoetigt Administrator-Rechte.
 #>
 

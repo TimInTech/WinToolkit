@@ -14,6 +14,7 @@
 .NOTES
     Datei   : 20-Maintenance.ps1
     Version : 1.0.0
+    Autor   : TimInTech (https://github.com/TimInTech)
     Abhaengigkeit: 00-Bootstrap.ps1 muss zuerst ausgefuehrt worden sein.
 #>
 
