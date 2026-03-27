@@ -1,0 +1,13 @@
+# Runtime directories - don't commit ephemeral data
+logs/
+state/
+backup/
+reports/
+
+# PowerShell temp / cache
+*.tmp
+*.bak
+
+# Windows
+Thumbs.db
+desktop.ini
